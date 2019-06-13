@@ -1,0 +1,280 @@
+<!doctype html>
+<html><!--<![endif]-->
+<head>
+	<title>Canary | The easy to use web scraper</title>
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<meta name="viewport" content="initial-scale=1,width=device-width">
+	<meta property="og:title" content="Canary | The easy to use web scraper">
+	<link rel="canonical" href="index.html">
+	<link rel="stylesheet" href="css/clean_styles.css">
+	<meta name="theme-color" content="#149287">
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+</head>
+<body lang="en" class="transparent-header product-page" id="new-features-page-two">
+	<nav class="site-header">
+		<div class="site-header__container header-sticky" style="background-color: rgba(20,20,34,0.9)">
+			<a href="index.html">
+				<img src="img/canary.png" alt="Canary Logo" height="80px" width="60px" aria-label="Canary Home">
+			</a>
+			<ul class="site-header__links mobile">
+			<span class="mobile-nav-button">
+			<span>Menu</span>
+			</span>
+			</ul>
+			<ul class="site-header__links desktop">
+				<li><a href="https://patreon.com/symbiotech_LLC" class="header-link">Donate</a></li>
+				<li><a href="https://github.com/Symbiotech-LLC/Canary" class="header-link">Download</a></li>
+					<!--
+				<li><a href="AboutCanary.html" class="header-link">About Canary</a></li>
+				
+					<li class="dropdown">
+					<div class="dropdown-link header-link">Menu &nbsp;<i class="fa fa-caret-down"></i></div>
+					<div class="dropdown-content">
+						<a href="https://github.com/Symbiotech-LLC/Canary" class="header-link">Canary | Uncaged (Paid)</a>
+						<a href="pricing.html" class="header-link">Pricing</a>
+						<a href="About.html" class="header-link">About Canary</a>
+					</div>
+				</li>-->
+			</ul>
+		</div>
+	</nav>
+<div class="mobile-nav">
+<ul class="nav-list">
+<li class="nav-list__header">Menu</li>
+<!--<li><a href="pricing.html" class="header-link">Pricing</a></li> -->
+<li><a href="About.html" class="header-link">About Canary</a></li>
+</ul>
+</div>
+<header class="hero hero--bg pbl"></header>
+<h3 align="center">Welcome to Canary</h3>
+<blockquote>
+	<p class="small center mtz">
+		<em>Fill out the form below to execute a new Canary Process.<br> Please note that Symbiotech LLC is not responsible for how this tool is used<br></em>
+	</p>
+</blockquote>
+<section class="container">
+		<!--
+	<div class="narrow-plus">
+		<h3 class="center teal mtl">Seamless Integrations</h3>
+	</div>
+	<div class="flex-grid center integrations">
+	</div> -->
+
+</section>
+
+<!-- JQuery to run canary with arguments -->
+<script type='text/javascript' src='/eel.js'></script>
+<!-- JQuery to hide url selection options -->
+<script src="css/canary.js"></script>
+
+<script type='text/javascript'>
+		async function url_file_picker() {
+				// Call into Python so we can access the file system
+				let filepath = await eel.file_picker()();
+				document.getElementById("url_file").value = filepath;
+		}
+		async function database_picker() {
+				// Call into Python so we can access the file system
+				let filepath = await eel.file_picker()();
+				document.getElementById("database").value = filepath;
+		}
+		async function run_canary() {
+				var args = [];
+				args.push(document.getElementById("url_text").value)
+				args.push(document.getElementById("url_file").value)
+				args.push(document.querySelector('input[name="type"]:checked').value)
+				args.push(document.getElementById("excel_enable").checked)
+				args.push(document.getElementById("advanced_enable").checked)
+				args.push(document.getElementById("base_url_enable").checked)
+				args.push(document.getElementById("base_url").value)
+				args.push(document.getElementById("limit_domain_enable").checked)
+				args.push(document.getElementById("limit_domain").value)
+				args.push(document.getElementById("exclude_domain_enable").checked)
+				args.push(document.getElementById("exclude_domain").value)
+				args.push(document.getElementById("auth_enable").checked)
+				args.push(document.getElementById("username").value)
+				args.push(document.getElementById("password").value)
+				args.push(document.getElementById("db_enable").checked)
+				args.push(document.getElementById("database").value)
+				args.push(document.getElementById("execute_automation").checked)
+				await eel.run_canary(args);
+				UncheckAll();
+		}
+</script>
+
+<div>
+	<form action="/" method="POST" enctype="multipart/form-data">
+		<table cellpadding='10' width='70%' align='center'>
+			<tr><td><h3>Required Options</h3></td></tr>
+			<tr>
+				<td width='30%'></td> <!-- Description -->
+				<td width='25%'></td> <!-- Option -->
+				<td width='45%'></td> <!-- Input -->
+			</tr>
+			<tr>
+				<td><p>Select Method to input URLs to test.<br>Must include protocol (http:// or https://)</p></td>
+				<td>
+					<div id="urls">
+						<input type="radio" name="url_selector" onclick="show_url_textarea()">URLs <input type="radio" name="url_selector" onclick="show_url_file()">File<br>
+					</div>
+				</td>
+				<td>
+					<div id="url-text-input" style="display: none;">
+						<textarea id='url_text' name="url_text" rows="10" cols="50" style="background-color: white; color: black;" placeholder="Please Enter URLs (Protocol + URL; one per line)."></textarea>
+					</div>
+					<div id="url-file-input" style="display: none;">
+						<label for="url_file"> Select a .txt file with urls to upload</label>
+						<!-- <input type="file" id="fileupload" name="file_upload"> -->
+						<input type="text" id="url_file" name="url_file" placeholder="Script File Path" style="background-color: white; color: black;">
+						<button type="button" onclick="url_file_picker()">Browse</button>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td><br>
+					<p><b>Status:</b> Will get status code of all specified pages</p>
+					<p><b>Scrape:</b> Will Scrape all links and images on specified pages</p>
+					<p><b>Verify:</b> Will scrape and verify links and images on pages specified</p><br>
+				</td>
+				<td>
+					<div id="run_type">
+						<input type="radio" name="type" value="status" checked>Status</input><br>
+						<input type="radio" name="type" value="scrape">Scrape</input><br>
+						<input type="radio" name="type" value="verify">Verify</input><br>
+					</div>
+				</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><p>Check to make output in excel (xlsx) format</p></td>
+				<td>
+					<div id="excel_output">
+						<input type="checkbox" name="excel_enable" id="excel_enable">Excel Output</input>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td><input type="checkbox" name="advanced_enable" id="advanced_enable" onclick="show_advanced_options()"/>Advanced Options</td>
+				<td></td>
+				<td></td>
+			</tr>
+		</table>
+
+		<!-- Enhancement Options -->
+		<div id="enhancers" style="display: none;">
+			<table cellpadding='10' width='70%' align='center'>
+				<tr><td><h3>Advanced Options</h3></td></tr>
+				<tr>
+					<td width='30%'></td> <!-- Description -->
+					<td width='25%'></td> <!-- Option -->
+					<td width='45%'></td> <!-- Input -->
+				</tr>
+				<tr>
+					<td><p>Prepend protocol + URL as prefix to specified URLs</p><br></td>
+					<td>
+						<div id="base-url">
+							<input type="checkbox" id="base_url_enable" name="base_url_enable" onclick="show_base_url()" /><br>
+							<!--<label for="base_url"> Check if you want to use base url to prepend to defined urls</label>-->
+						</div>
+					</td>
+					<td>
+							<input type="text" id="base_url" name="base_url" placeholder="Enter Domain Here" style="display: none; color: black;" />
+					</td>
+				</tr>
+				<tr>
+					<td><p>Limit Results to specified Domain</p></td>
+					<td>
+						<div id="limit-domain">
+							<input type="checkbox" id="limit_domain_enable" name="limit_domain_enable" onclick="show_domain_limit()" /><br>
+							<!--<label for="base_url"> Check if you want to use base url to prepend to defined urls</label>-->
+							<!--<input type="text" name="limit_domain" id="limit_domain" placeholder="Enter Domain Here"></input> -->
+						</div>
+					</td>
+					<td>
+						<textarea rows="3" cols="50" id="limit_domain" name="limit_domain" placeholder="Please Enter URLs (Protocol + URL; one per line)." style="display: none; color: black;"></textarea>
+					</td>
+				</tr>
+				<tr>
+					<td><p>Exlude results from specified domain</p></td>
+					<td>
+						<div id="exclude-domain">
+							<input type="checkbox" id="exclude_domain_enable" name="exclude_domain_enable" onclick="show_exclude_domain()" /><br>
+							<!--<label for="base_url"> Check if you want to use base url to prepend to defined urls</label>-->
+							<!--<input type="text" name="exclude_domain" id="exclude_domain" placeholder="Enter Domain Here"></input>-->
+						</div>
+					</td>
+					<td>
+						<textarea rows="3" cols="50" id="exclude_domain" name="exclude_domain" placeholder="Please Enter URLs (Protocol + URL; one per line)." style="display: none; color: black;"></textarea>
+					</td>
+				</tr>
+				<tr>
+					<td><p>Basic Authentication Required?</p></td>
+					<td>
+							<input type="checkbox" id="auth_enable" name="auth_enable" onclick="show_authentication()" />
+					</td>
+					<td>
+						<div id="authentication" style="display: none;">
+							<table id="auth_table">
+								<tr><td><p id="auth_tooltip">Enter Username:</p></td></tr>
+								<tr><td><input type="text" id="username" name="username" style="background-color: white; color: black;" /></td></tr>
+								<tr><td><p id="auth_tooltip2">Enter Password:</p></td></tr>
+								<tr><td><input type="password" id="password"  name="password" style="background-color: white; color: black;" /></td></tr>
+							</table>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td><p>Trigger Automation using sqlite Component Database?</p></td>
+					<td>
+							<input type="checkbox" id="db_enable" name="db_enable" onclick="show7()" />
+					</td>
+					<td>
+						<div id="database_info" style="display: none;">
+							<!-- <input type="file" id="database" name="database" placeholder="Enter path to SQLite Database File" style="display: none;" /> -->
+							<input type="text" id="database" name="database" placeholder="Database" style="background-color: white; color: black;">
+							<button type="button" id="database_button" onclick="database_picker()">Browse</button>
+							<br />
+							<input type="checkbox" id="execute_automation" name="execute_automation">Trigger Automation</input>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+		
+		 <table cellpadding='10' width='70%' align='center'>
+				<tr>
+					<td width='30%'></td> <!-- Description -->
+					<td width='25%'></td> <!-- Option -->
+					<td width='45%'></td> <!-- Input -->
+				</tr>
+			 <tr>
+				 <!--<td><input type="submit" value="Run" method="post" style="align: left;" /></td> -->
+				 <td><button type="button" onclick="run_canary()">Run</button></td>
+				 <td></td>
+				 <td></td>
+			 </tr>
+		 </table>
+		
+	</form>
+</div>
+
+<!--<div class="pbl mbz" style="background-image: url('../img/misc/foggy-forest.jpg')">
+</div>-->
+<br>
+<br />
+<footer class="site-footer">
+	<div class="container">
+		<div class="hero__content center">
+			<p class="subtext"><b>Please donate to assist us in providing new features to Canary</b></p><br />
+			<a href="https://www.patreon.com/symbiotech_LLC"><img src="./img/Logo_Orange.png" alt="canary logo" height="150px" width="120px" aria-label="Donate Via Patreon"></a><br><br>
+		</div>
+		<ul>
+			<li><a class="footer-link" href="mailto:grimmvenom@gmail.com">Contact Us</a></li>
+			<li><a class="footer-link" href="https://github.com/Symbiotech-LLC" target="_blank" rel="noopener">Symbiotech LLC</a></li>
+		</ul>
+		<p class="site-footer__copyright">&copy; 2018-2019 Symbiotech LLC.</i></p>
+	</div>
+</footer>
+</body>
+</html>

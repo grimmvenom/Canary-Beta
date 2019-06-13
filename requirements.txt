@@ -1,0 +1,9 @@
+bottle==0.12.16
+urllib3==1.24
+requests==2.20.0
+pandas==0.24.2
+XlsxWriter==1.1.2
+Eel==0.10.4
+lxml==4.2.5
+PyInstaller==3.4
+beautifulsoup4==4.7.1
