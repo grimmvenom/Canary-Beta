@@ -175,7 +175,9 @@ class Base:
 		return re.findall('(?i)(https?:)', url)[0]
 
 	def get_site_root(self, url):
-		return re.findall('(?i)(.+?://\w+.\w+.\w+)', url)[0]
+		parsed_uri = urllib.parse.urlparse(str(url))
+		result = '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_uri)
+		return result
 
 	def query_sitemap_db(self, db, query):  # Query Components DB for list of components and identifiers
 		queried_urls = []
