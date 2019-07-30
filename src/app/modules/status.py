@@ -16,6 +16,7 @@ from http.client import responses
 from lxml.html import fromstring
 from app.core.base import Base
 
+
 class Status:
 	def __init__(self, arguments):
 		self.arguments = arguments
