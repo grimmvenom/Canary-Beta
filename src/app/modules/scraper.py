@@ -7,7 +7,8 @@ Summary:
 		Also supports beautifulsoup element lookup, xpath lookup, and url comparison based on db input
 		
 author:
-grimm venom <grimmvenom@gmail.com>
+GrimmVenom <grimmvenom@gmail.com>
+
 """
 
 import re

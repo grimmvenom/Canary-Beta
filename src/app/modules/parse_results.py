@@ -3,7 +3,7 @@
 Summary:
 		This Module will take json logs and convert them into tsv format
 author:
-grimm venom <grimmvenom@gmail.com>
+GrimmVenom <grimmvenom@gmail.com>
 
 """
 

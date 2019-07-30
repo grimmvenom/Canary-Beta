@@ -3,7 +3,7 @@
 Summary:
 		This Module Contains base methods for functionality
 author:
-grimm venom <grimmvenom@gmail.com>
+GrimmVenom <grimmvenom@gmail.com>
 
 """
 

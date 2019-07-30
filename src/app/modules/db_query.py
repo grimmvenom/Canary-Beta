@@ -1,3 +1,12 @@
+# -*- coding: utf-8 -*-
+"""
+Summary:
+		This Module is to perform sqlite queries
+author:
+GrimmVenom <grimmvenom@gmail.com>
+
+"""
+
 import os
 import sys
 import platform

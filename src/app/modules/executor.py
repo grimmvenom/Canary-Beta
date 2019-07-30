@@ -3,7 +3,7 @@
 Summary:
 		This Module will take json input, get component and page tests scraped from page, and execute the specified commands
 author:
-grimm venom <grimmvenom@gmail.com>
+GrimmVenom <grimmvenom@gmail.com>
 
 """
 

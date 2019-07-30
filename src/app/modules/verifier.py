@@ -5,7 +5,7 @@ Summary:
 		This Module will make multiprocessed requests to determine the scraped results availability
 		results are returned in json / dictionary format
 author:
-grimm venom <grimmvenom@gmail.com>
+GrimmVenom <grimmvenom@gmail.com>
 
 """
 

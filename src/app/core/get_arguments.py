@@ -3,7 +3,7 @@
 Summary:
 		This Module will accept command line arguments to drive all activity in other modules
 author:
-grimm venom <grimmvenom@gmail.com>
+GrimmVenom <grimmvenom@gmail.com>
 
 """
 

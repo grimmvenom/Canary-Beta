@@ -4,7 +4,7 @@ Summary:
 		This Module will make multiprocessed requests to determine a list of urls availability
 		results are returned in json / dictionary format
 author:
-grimm venom <grimmvenom@gmail.com>
+GrimmVenom <grimmvenom@gmail.com>
 
 """
 

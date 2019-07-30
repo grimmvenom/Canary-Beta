@@ -8,7 +8,7 @@ Update:
 		as the eyes of Ivan and still perform it's tasks. All output will be in JSON and html
 
 author:
-grimm venom <grimmvenom@gmail.com>
+GrimmVenom <grimmvenom@gmail.com>
 
 Test using:
 http://the-internet.herokuapp.com/
@@ -64,7 +64,6 @@ class Canary:
 		print("\nTotal Runtime: " + str(end_time) + " (seconds)\n")
 	
 	def _status(self):
-		
 		url_status = Status(self.arguments)  # Set Variables in status.py
 		self.status_log = url_status.main()  # Request all unique urls and get a list of statuses
 		if self.arguments.excel_output:
@@ -75,7 +74,6 @@ class Canary:
 		self.logger.open_out_file(out_file)
 	
 	def _scrape(self):
-		
 		scraper = Scrape(self.arguments)  # Set Variables in scraper.py
 		self.scrape_log = scraper.main()  # Scrape content and return dictionary
 		if not self.arguments.verify:

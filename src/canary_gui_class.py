@@ -3,7 +3,7 @@ Summary:
     Python Script to run webform via a webservice to run as the GUI of the Ivan Application
 
 Author:
-    grimmvenom <grimmvenom@gmail.com>
+    GrimmVenom <grimmvenom@gmail.com>
 
 
 Helpful CSS Tool:
