@@ -1,3 +1,4 @@
 src/*__pycache__
 .vs/
 .DS_Store
+Results/
