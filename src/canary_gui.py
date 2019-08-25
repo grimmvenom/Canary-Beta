@@ -46,7 +46,7 @@ def run_canary(args):
             args[index] = data.replace("'", '')
         except:
             pass
-    command = [str(sys.executable) + " " + str(current_dir) + os.sep + "main.py"]
+    command = [str(sys.executable) + " " + str(current_dir) + os.sep + "canary.py"]
     if args[0].split("\n"):  # url_text
         for url in args[0].split("\n"):
             command.append('-u ' + str(url) + '')
