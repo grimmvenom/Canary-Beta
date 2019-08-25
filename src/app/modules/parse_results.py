@@ -15,7 +15,7 @@ import json
 import platform
 import csv
 import xlsxwriter
-import pandas
+import numpy, pandas
 from pandas.io.json import json_normalize
 from app.core.base import Base
 

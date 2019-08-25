@@ -1,10 +1,16 @@
 
 # Resource: https://blog.easyaspy.org/post/16/2019-05-15-compiling-python-code-with-cython
+# Resource: https://github.com/cython/cython/wiki/EmbeddingCython
+# Resource: https://stackoverflow.com/questions/22507592/making-an-executable-in-cython
+# Resource: https://github.com/cython/cython/wiki
+# Resource: https://github.com/cython/cython/wiki/PackageHierarchy
+# Example: http://docs.cython.org/en/latest/src/userguide/numpy_tutorial.html
+# To Compile: python3 compile.py build_ext --inplace -a comile-report --embed?
 # Create Recursive Cleanup of .pyc, .c, .pyd files
-# To Compile: python3 compile.py build_ext --inplace
 # To Cleanup on Linux: find . -maxdepth 3 -type f -name "*.c" -delete 
 
 from setuptools import find_packages, setup
+from distutils.core import setup
 from distutils.extension import Extension
 from Cython.Distutils import build_ext
 from Cython.Build import cythonize
@@ -45,6 +51,7 @@ ext_modules = [
     Extension('app.modules.verifier', ['app/modules/verifier.py']),
     Extension('app.modules.executor', ['app/modules/executor.py']),
     Extension('app.modules.parse_results', ['app/modules/parse_results.py']),
+    Extension('.', ['.']),
     Extension('compile', ['compile.py']),
     Extension('canary', ['canary.py']),
     Extension('canary_gui', ['canary_gui.py']),
