@@ -151,7 +151,7 @@ def check_existence(application):
 if __name__ == "__main__":
     print("Running Canary GUI")
     current_dir = os.path.dirname(os.path.realpath(__file__))
-    init_dir = current_dir + os.sep + 'app' + os.sep + 'resources' + os.sep + 'web_template'
+    init_dir = current_dir + os.sep + 'resources' + os.sep + 'web_template'
     
     
     eel.init(init_dir)
