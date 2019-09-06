@@ -3,7 +3,7 @@
 # Canary Summary: #
 canary is a command line tool to scrape html elements, test availability of links and images, and build an easy to read report
 
-##` WARNING!:`
+` WARNING!:`
 `Be careful about the number of urls being verified / scraped.`
 `Frequent Use may be viewed by Web Application Firewalls / IDPS systems as a DoS Attack`
 
