@@ -45,7 +45,7 @@ Report will contain the following:
 *  Message
 *  Page Title
 
-canary.exe -u "https://www.google.com" `--type scrape`
+canary.exe -u "https://www.google.com" `--type status`
 
 ### Scrape webpages and build report: ###
 Report will contain the following: 
