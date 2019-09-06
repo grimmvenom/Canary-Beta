@@ -53,6 +53,7 @@ Report will contain the following:
 *  anchor links `<a>`
 *  images `<img>`
 *  forms / input fields (`<button>, <input>, etc..`)
+*  iframes
 
 canary.exe -u "https://www.google.com" `--type scrape`
 
@@ -62,6 +63,7 @@ Report will contain:
 * all anchor links `<a>`, status code, status code message, and page title
 * images `<img>`,status code, status code message, and page title
 * forms / input fields
+* iframes
 
 canary.exe -u "https://www.google.com" `--type verify`
 
