@@ -1,6 +1,6 @@
 
 <img src="src/resources/canary.png" alt="Canary Logo" width="200"/>
-## Canary Summary: ##
+# Canary Summary: #
 canary is a command line tool to scrape html elements, test availability of links and images, and build an easy to read report
 
 ##` WARNING!:`
