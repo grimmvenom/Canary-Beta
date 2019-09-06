@@ -1,5 +1,5 @@
 
-#![picturealt](canary.png "Canary Logo") Canary Summary
+#![picturealt](src/resources/canary.png "Canary Logo") Canary Summary
 canary is a command line tool to scrape html elements, test availability of links and images, and build an easy to read report
 
 ##` WARNING!:`
