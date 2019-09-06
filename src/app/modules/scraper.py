@@ -20,7 +20,9 @@ from enum import Enum
 from lxml import etree
 # Imports Change if __main__
 from app.core.base import Base
+from app.modules.verifier import Verify
 from app.modules.db_query import Components_DB
+from app.modules.parse_results import Parse_Excel
 
 
 class ScrapeRequirements(Enum):
@@ -40,6 +42,7 @@ class Scrape:
 		self.session = requests.session()
 		self.available_components = dict()
 		self.available_page_tests = dict()
+		self.logger = Base()
 		if self.arguments.web_username and self.arguments.web_password:
 			print("Setting Auth with username: " + str(self.arguments.web_username))
 			self.session.auth = (self.arguments.web_username, self.arguments.web_password)
@@ -57,6 +60,7 @@ class Scrape:
 		self._worker(self.urls)
 		self._sort_dict()
 		print("total scraped results: " + str(self.scraped_total) + "\n")
+		self._log()
 		return self.sorted_results
 
 	def _worker(self, urls):
@@ -317,4 +321,17 @@ class Scrape:
 								self.sorted_results[url_key][str(et_key)][x] = value
 		# logger.write_log(self.sorted_results, 'verifiedInfo')
 
+	def _log(self):
+		if 'verify' not in self.arguments.type:
+			if self.arguments.excel_output:
+				parser = Parse_Excel(self.arguments)
+				out_file = parser.scraper_to_excel(self.sorted_results, 'scrapedInfo')
+			else:
+				out_file = self.logger.write_log(self.sorted_results, 'scrapedInfo')  # Write Scraped Dictionary to json File
+			self.logger.open_out_file(out_file)
+		else:
+			verifier = Verify(self.sorted_results, self.arguments)  # Define Verifier
+			self.verified_log = verifier.main()  # Run Verifier Method
+			self.sorted_results = self.verified_log
+			# out_file = self.logger.write_log(self.verified_log, 'verifiedInfo')  # Write Log to json File
 

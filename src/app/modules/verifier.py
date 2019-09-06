@@ -18,6 +18,7 @@ import requests
 import multiprocessing
 from multiprocessing import Pipe
 from app.core.base import Base
+from app.modules.parse_results import Parse_Excel
 
 
 class Verify:
@@ -27,6 +28,7 @@ class Verify:
 		self.base = Base()
 		self.unique_requests = list()
 		self.session = requests.session()
+		self.logger = Base()
 		if self.arguments.web_username and self.arguments.web_password:
 			print("Setting Auth with username: " + str(self.arguments.web_username))
 			self.session.auth = (self.arguments.web_username, self.arguments.web_password)
@@ -35,6 +37,7 @@ class Verify:
 	def main(self):
 		self._unique_requests()
 		self._worker()
+		self._log()
 		return self.log
 	
 	def _unique_requests(self):
@@ -44,7 +47,7 @@ class Verify:
 				if not element_type.startswith(('ignored_', 'forms')):  # Ignore some keys
 					for index, value in self.log[url_key][element_type].items():  # Append data to list
 						target_url = value['target_url']
-						if value['valid_url'] == True:
+						if value['valid_url']:
 							counter += 1
 							if target_url not in self.unique_requests:
 								self.unique_requests.append(target_url)
@@ -79,3 +82,11 @@ class Verify:
 	def _verify(self, url):
 		response_data, self.session = self.base.session_get_response(self.session, url, False)
 		return [url, response_data]
+
+	def _log(self):
+		if self.arguments.excel_output:
+			parser = Parse_Excel(self.arguments)
+			out_file = parser.scraper_to_excel(self.log, 'verifiedInfo')
+		else:
+			out_file = self.logger.write_log(self.log, 'verifiedInfo')  # Write Scraped Dictionary to json File
+		self.logger.open_out_file(out_file)

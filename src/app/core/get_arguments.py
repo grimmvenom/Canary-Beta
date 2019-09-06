@@ -16,19 +16,18 @@ import base64
 
 
 def get_arguments():
+	type_options = ['status', 'scrape', 'verify']
 	parser = argparse.ArgumentParser()
 	parser.add_argument('-u', "-url", action='append', dest='url', help='-u <url> \thttp://<url> or https://<URL>')
 	parser.add_argument('-f', "-file", action='store', dest='file', help=' -f <filepath.txt> \n.txt file to import a list of urls from. One URL per line. Include http:// or https://')
 	parser.add_argument('-base', action='store', dest='base_url', help='-base "http://www.google.com" \nbase url to be prepended to urls without specified base url or don\'t start with http(s)://')
-	parser.add_argument('-auth', "-a", "--authentication", action='store', dest='credentials', help='-auth <username>:<password>')
+	parser.add_argument("-a", '-auth', "--authentication", action='store', dest='credentials', help='-auth <username>:<password>')
 	parser.add_argument("--user", action='store', dest='web_username', help='--user <username>')
 	parser.add_argument("--password", action='store', dest='web_password', help='--password <password>')
-	
-	# Option to check url status
-	parser.add_argument('-status', action='store_true', dest='status', help='-status \nto verify urls are available')
-	# Scrape + Verify Options
-	parser.add_argument("-scrape", action='store_true', dest='scrape', help='-scrape \nto scrape and build report of (links, images, form elements')
-	parser.add_argument('-verify', action='store_true', dest='verify', help='-verify \nto verify scraped images and links')
+
+	parser.add_argument('-t', '--type', action='append', choices=type_options, dest="type",
+		required=True, help='--type status, scrape, or verify (default: %(default)s)')
+
 	parser.add_argument('--limit', action='append', dest='limit', help='--limit <domain> \nto only check content with specified domain')
 	parser.add_argument('--exclude', action='append', dest='exclude', help='--exclude <domain> \nSpecific domains to ignore content for')
 	# Excel Output
@@ -38,16 +37,16 @@ def get_arguments():
 	parser.add_argument("--db", '--database', action='store', dest='database', help='Path to SQLite Component / Page_Test Database')
 	parser.add_argument("--execute", action='store_true', dest='execute_tests', default=False, help='Use the --execute option to execute commands in component / page test tables')
 	arguments = parser.parse_args()
+
 	arguments.urls = list()
-	
-	print("\n")
+
 	
 	try:
 		arguments.urls = list(arguments.url)
 	except:
 		pass
 	
-	if arguments.file:
+	if arguments.file:  # If file of urls defined, loop through file and add to list
 		f = open(arguments.file, 'r')
 		file_urls = f.read().splitlines(keepends=False)
 		for url in file_urls:
@@ -59,7 +58,7 @@ def get_arguments():
 		parser.error("You must specify a url with the (-u) flag or specify a .txt filepath with 1 url per line with the (-f) flag")
 		exit()
 		
-	if arguments.base_url:
+	if arguments.base_url:  # If base url defined, update invalid urls to prepend base url
 		if arguments.base_url.endswith("/"):
 			arguments.base_url = arguments.base_url.replace('/', '', 1)[-1]
 			if not arguments.base_url.startswith('http://') and not arguments.base_url.startswith('https://'):
@@ -73,19 +72,11 @@ def get_arguments():
 					else:
 						url = arguments.base_url + "/" + url
 					arguments.urls[index] = url
-	
-	if arguments.status:  # If Status is defined, don't scrape and verify content on pages
-		arguments.scrape = False
-		arguments.verify = False
-		
-	# Ensure Scrape and Verify Flags work together
-	if arguments.verify:  # If verify, auto scrape
-		arguments.scrape = True
-	if not arguments.status and not arguments.scrape and not arguments.verify:  # if status and verify not selected,
-		arguments.scrape = True
-	if arguments.scrape:  # If scrape is set, don't do status report
-		arguments.status = False
-	
+
+	if "verify" in arguments.type and not "scrape" in arguments.type:
+		arguments.type.append("scrape")
+	arguments.type = list(set(arguments.type))
+
 	if arguments.credentials:  # accept credentials (username), (username:password), (username:)
 		try:
 			arguments.web_username = arguments.credentials.split(':')[0]

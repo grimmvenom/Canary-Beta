@@ -37,45 +37,51 @@ canary.exe `-f "filepath.txt" -base "https://www.mydomain.com"`
       1. https://www.mydomain.com/home.html
       2. https://www.mydomain.com/sitemap.html
 
+### Check Status Codes and build report: ###
+Report will contain the following: 
 
-### Scrape webpage and build report: ###
+*  URL
+*  Status Code
+*  Message
+*  Page Title
+
+canary.exe -u "https://www.google.com" `--type scrape`
+
+### Scrape webpages and build report: ###
 Report will contain the following: 
 
 *  anchor links `<a>`
 *  images `<img>`
 *  forms / input fields (`<button>, <input>, etc..`)
 
+canary.exe -u "https://www.google.com" `--type scrape`
 
-
-canary.exe -u "https://www.google.com" `-scrape`
-
-
-### Scrape webpage, Verify images / links, and build report:
+### Scrape webpages, Verify images / links, and build report:
 Report will contain:
 
 * all anchor links `<a>`, status code, status code message, and page title
 * images `<img>`,status code, status code message, and page title
 * forms / input fields
 
-canary.exe -u "https://www.google.com" `-verify`
+canary.exe -u "https://www.google.com" `--type verify`
 
 ### Request using basic authentication: 
 You will be prompted for password. This is to help maintain security and hide password from cmdline history. 
 
 `Warning:` You may still be able to see password sent in clear text if capturing network packets or monitoring the network 
 
-canary.exe -u "https://www.google.com" -verify `-webuser "grimm"` 
+canary.exe -u "https://www.google.com" --type verify `-webuser "grimm"` 
 
 ### Limit requests to only url's in the specified domain: 
 It is sometimes common to see links to facebook, twitter, and other sites when scraping. This will limit the results to
 what you care about. 
 
-canary.exe -u "https://www.mydomain.com" -verify `--limit "https://www.mydomain.com"` 
+canary.exe -u "https://www.mydomain.com" --type verify `--limit "https://www.mydomain.com"` 
 
 ### Exclude specified domains when testing: 
 Exclude urls that have the specified domain 
 
-canary.exe -u "https://www.google.com" -verify `--exclude "https://www.facebook.com"` 
+canary.exe -u "https://www.google.com" --type verify `--exclude "https://www.facebook.com"` 
 
 
 

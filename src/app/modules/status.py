@@ -15,6 +15,7 @@ import multiprocessing
 from http.client import responses
 from lxml.html import fromstring
 from app.core.base import Base
+from app.modules.parse_results import Parse_Excel
 
 
 class Status:
@@ -24,6 +25,7 @@ class Status:
 		self.base = Base()
 		self.status_results = dict()
 		self.session = requests.session()
+		self.logger = Base()
 		if self.arguments.web_username and self.arguments.web_password:
 			print("Setting Auth with username: " + str(self.arguments.web_username))
 			self.session.auth = (self.arguments.web_username, self.arguments.web_password)
@@ -34,6 +36,7 @@ class Status:
 		print("Checking URL Statuses")
 		print("# of Urls Defined: " + str(len(self.urls)))
 		self._worker()
+		self._log()
 		return self.status_results
 	
 	def _worker(self):
@@ -57,3 +60,11 @@ class Status:
 	def _verify(self, url):
 		response_data, session = self.base.session_get_response(self.session, url, False)
 		return {url: response_data}
+
+	def _log(self):
+		if self.arguments.excel_output:
+			parser = Parse_Excel(self.arguments)
+			out_file = parser.status_to_excel(self.status_results, 'statusCheck')  # Write Excel Output
+		else:
+			out_file = self.logger.write_log(self.status_results, 'statusCheck')  # Write Log to json File
+		self.logger.open_out_file(out_file)

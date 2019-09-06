@@ -26,8 +26,6 @@ from app.core.base import Base
 from app.core.get_arguments import get_arguments
 from app.modules.status import Status
 from app.modules.scraper import Scrape
-from app.modules.verifier import Verify
-from app.modules.parse_results import Parse_Excel
 from app.modules.executor import Executor
 
 
@@ -39,59 +37,31 @@ class Canary:
 		self.status_log = dict()
 		self.scrape_log = dict()
 		self.verified_log = dict()
+		self.mapping = {'status': {'function': "Status(self.arguments).main()", 'var': "self.status_log"},
+			'scrape': {'function': "Scrape(self.arguments).main()", 'var': "self.scrape_log"},
+			'verify': {'function': "Verify(self.scrape_log, self.arguments).main()", 'var': "self.verified_log"}}
 		self.logger = Base()
 		self.main()
 
 	def main(self):
 		start_time = time.time()
-		
+		type_loop = self.arguments.type.copy()
+		if 'verify' in type_loop:
+			type_loop.remove('verify')
+
 		if self.arguments.exclude:
 			print("Excluding: " + str(self.arguments.exclude) + "\n")
 
-		if self.arguments.status:
-			self._status()
-			
-		if self.arguments.scrape:  # Scrape Links, Images, Forms, etc from page
-			self._scrape()
-			if self.arguments.verify:  # Verify images, links scraped from page
-				self._verify()
-			if self.arguments.execute_tests:  # Execute found test cases from database
-				
-				executor = Executor(self.scrape_log, self.arguments)
-				executor_results = executor.main()
-				
+		for type in type_loop:
+			type = str(type)
+			var = str(self.mapping[type]['var'])
+			function = str(self.mapping[type]["function"])
+			# print(var)
+			# print(function)
+			setattr(self, var, exec(function))
+
 		end_time = '{:.2f}'.format((time.time() - start_time))
 		print("\nTotal Runtime: " + str(end_time) + " (seconds)\n")
-	
-	def _status(self):
-		url_status = Status(self.arguments)  # Set Variables in status.py
-		self.status_log = url_status.main()  # Request all unique urls and get a list of statuses
-		if self.arguments.excel_output:
-			parser = Parse_Excel(self.arguments)
-			out_file = parser.status_to_excel(self.status_log, 'statusCheck') # Write Excel Output
-		else:
-			out_file = self.logger.write_log(self.status_log, 'statusCheck')  # Write Log to json File
-		self.logger.open_out_file(out_file)
-	
-	def _scrape(self):
-		scraper = Scrape(self.arguments)  # Set Variables in scraper.py
-		self.scrape_log = scraper.main()  # Scrape content and return dictionary
-		if not self.arguments.verify:
-			if self.arguments.excel_output:
-				parser = Parse_Excel(self.arguments)
-				out_file = parser.scraper_to_excel(self.scrape_log, 'scrapedInfo')
-			else:
-				out_file = self.logger.write_log(self.scrape_log, 'scrapedInfo')  # Write Scraped Dictionary to json File
-			self.logger.open_out_file(out_file)
-	
-	def _verify(self):
-		verifier = Verify(self.scrape_log, self.arguments)  # Define Verifier
-		self.verified_log = verifier.main()  # Run Verifier Method
-		out_file = self.logger.write_log(self.verified_log, 'verifiedInfo')  # Write Log to json File
-		if self.arguments.excel_output:  # Write Scraped / Verified Data to file
-			parser = Parse_Excel(self.arguments)
-			out_file = parser.scraper_to_excel(self.scrape_log, 'verifiedInfo')
-		self.logger.open_out_file(out_file)
 
 
 if __name__ == "__main__":

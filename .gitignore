@@ -2,3 +2,4 @@ src/*__pycache__
 .vs/
 .DS_Store
 Results/
+*__pycache__
