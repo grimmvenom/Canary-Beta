@@ -4,7 +4,7 @@ canary is a command line tool to scrape html elements, test availability of link
 
 ##` WARNING!:`
 `Be careful about the number of urls being verified / scraped.`
-`Frequent Use may be viewed by Web Application Firewalls / IDPS systems as a DoS Attack` 
+`Frequent Use may be viewed by Web Application Firewalls / IDPS systems as a DoS Attack`
 
 `Do Not use this tool on any websites without the owner's permission.`
 `Symbiotech LLC is not liable / responsible for how this tool is used.`
@@ -12,22 +12,22 @@ canary is a command line tool to scrape html elements, test availability of link
 
 # Canary Commands: #
 ### List all available options (help) ###
-canary.exe `-h`
+python canary.py `-h`
 
 ### Output in excel format ###
-canary.exe `--excel`
+python canary.py `--excel`
 
 
 ### Define Urls to test: ###
-canary.exe `-u "http://www.google.com" -u "https://www.yahoo.com"`
+python canary.py `-u "http://www.google.com" -u "https://www.yahoo.com"`
 
 
 ### Test with a .txt containing a list of urls: ###
-canary.exe `-f "filepath.txt"`
+python canary.py `-f "filepath.txt"`
 
 
 ### Prepend domain to paths: ###
-canary.exe `-f "filepath.txt" -base "https://www.mydomain.com"`
+python canary.py `-f "filepath.txt" -base "https://www.mydomain.com"`
 
     filepath.txt:
       1. /home.html
@@ -38,24 +38,24 @@ canary.exe `-f "filepath.txt" -base "https://www.mydomain.com"`
       2. https://www.mydomain.com/sitemap.html
 
 ### Check Status Codes and build report: ###
-Report will contain the following: 
+Report will contain the following:
 
 *  URL
 *  Status Code
 *  Message
 *  Page Title
 
-canary.exe -u "https://www.google.com" `--type status`
+python canary.py -u "https://www.google.com" `--type status`
 
 ### Scrape webpages and build report: ###
-Report will contain the following: 
+Report will contain the following:
 
 *  anchor links `<a>`
 *  images `<img>`
 *  forms / input fields (`<button>, <input>, etc..`)
 *  iframes
 
-canary.exe -u "https://www.google.com" `--type scrape`
+python canary.py -u "https://www.google.com" `--type scrape`
 
 ### Scrape webpages, Verify images / links, and build report:
 Report will contain:
@@ -65,25 +65,25 @@ Report will contain:
 * forms / input fields
 * iframes
 
-canary.exe -u "https://www.google.com" `--type verify`
+python canary.py -u "https://www.google.com" `--type verify`
 
-### Request using basic authentication: 
-You will be prompted for password. This is to help maintain security and hide password from cmdline history. 
+### Request using basic authentication:
+You will be prompted for password. This is to help maintain security and hide password from cmdline history.
 
-`Warning:` You may still be able to see password sent in clear text if capturing network packets or monitoring the network 
+`Warning:` You may still be able to see password sent in clear text if capturing network packets or monitoring the network
 
-canary.exe -u "https://www.google.com" --type verify `-webuser "grimm"` 
+python canary.py -u "https://www.google.com" --type verify `-webuser "grimm"`
 
-### Limit requests to only url's in the specified domain: 
+### Limit requests to only url's in the specified domain:
 It is sometimes common to see links to facebook, twitter, and other sites when scraping. This will limit the results to
-what you care about. 
+what you care about.
 
-canary.exe -u "https://www.mydomain.com" --type verify `--limit "https://www.mydomain.com"` 
+python canary.py -u "https://www.mydomain.com" --type verify `--limit "https://www.mydomain.com"`
 
-### Exclude specified domains when testing: 
-Exclude urls that have the specified domain 
+### Exclude specified domains when testing:
+Exclude urls that have the specified domain
 
-canary.exe -u "https://www.google.com" --type verify `--exclude "https://www.facebook.com"` 
+python canary.py -u "https://www.google.com" --type verify `--exclude "https://www.facebook.com"`
 
 
 
