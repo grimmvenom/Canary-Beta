@@ -53,7 +53,7 @@ def run_canary(args):
     if args[1]:  # url_file
         command.append('-f ' + str(args[1]) + '')
     if args[2]:  # type
-        command.append('-' + str(args[2]))
+        command.append('--type ' + str(args[2]))
     if args[3]:  # enable_excel
         command.append('--excel')
     if args[4]:  # Enable Advanced options
