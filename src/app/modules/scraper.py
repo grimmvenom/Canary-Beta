@@ -29,6 +29,7 @@ class ScrapeRequirements(Enum):
 	IMAGES = ["img"], ["src", "name", "class", "id", "value", 'title', 'alt', 'role', 'data-srcset']
 	LINKS = ["a"], ["href",  "name", "class", "id", "type", "alt", "title", 'role']
 	FORMS = ["input", 'textarea', 'select', 'button'], ["name", "class", "id", "type", "value", 'role']
+	IFRAMES = ["iframe"], ["src"]
 
 
 class Scrape:
@@ -151,7 +152,7 @@ class Scrape:
 								element_log['target_url'] = temp
 							elif temp.startswith("//"):
 								element_log['target_url'] = self.base.get_protocol(url) + temp
-							elif temp.startswith("/"):
+							elif temp.startswith("/") or not any([temp.startswith(s) for s in ['http://', 'https://', "//"]]):
 								element_log['target_url'] = str(self.base.get_site_root(url)) + temp
 							elif temp.startswith(manual):
 								pass
