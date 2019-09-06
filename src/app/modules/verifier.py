@@ -89,4 +89,5 @@ class Verify:
 			out_file = parser.scraper_to_excel(self.log, 'verifiedInfo')
 		else:
 			out_file = self.logger.write_log(self.log, 'verifiedInfo')  # Write Scraped Dictionary to json File
-		self.logger.open_out_file(out_file)
+		if not self.arguments.no_open:
+			self.logger.open_out_file(out_file)

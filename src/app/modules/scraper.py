@@ -329,7 +329,8 @@ class Scrape:
 				out_file = parser.scraper_to_excel(self.sorted_results, 'scrapedInfo')
 			else:
 				out_file = self.logger.write_log(self.sorted_results, 'scrapedInfo')  # Write Scraped Dictionary to json File
-			self.logger.open_out_file(out_file)
+			if not self.arguments.no_open:
+				self.logger.open_out_file(out_file)
 		else:
 			verifier = Verify(self.sorted_results, self.arguments)  # Define Verifier
 			self.verified_log = verifier.main()  # Run Verifier Method

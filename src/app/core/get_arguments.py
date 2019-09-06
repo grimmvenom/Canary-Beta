@@ -20,7 +20,7 @@ def get_arguments():
 	parser = argparse.ArgumentParser()
 	parser.add_argument('-u', "-url", action='append', dest='url', help='-u <url> \thttp://<url> or https://<URL>')
 	parser.add_argument('-f', "-file", action='store', dest='file', help=' -f <filepath.txt> \n.txt file to import a list of urls from. One URL per line. Include http:// or https://')
-	parser.add_argument('-base', action='store', dest='base_url', help='-base "http://www.google.com" \nbase url to be prepended to urls without specified base url or don\'t start with http(s)://')
+	parser.add_argument('-b', '-base', action='store', dest='base_url', help='-base "http://www.google.com" \nbase url to be prepended to urls without specified base url or don\'t start with http(s)://')
 	parser.add_argument("-a", '-auth', "--authentication", action='store', dest='credentials', help='-auth <username>:<password>')
 	parser.add_argument("--user", action='store', dest='web_username', help='--user <username>')
 	parser.add_argument("--password", action='store', dest='web_password', help='--password <password>')
@@ -28,11 +28,13 @@ def get_arguments():
 	parser.add_argument('-t', '--type', action='append', choices=type_options, dest="type",
 		required=True, help='--type status, scrape, or verify (default: %(default)s)')
 
+	# Limit or exclude domains from results
 	parser.add_argument('--limit', action='append', dest='limit', help='--limit <domain> \nto only check content with specified domain')
 	parser.add_argument('--exclude', action='append', dest='exclude', help='--exclude <domain> \nSpecific domains to ignore content for')
 	# Excel Output
 	parser.add_argument('--excel', action='store_true', dest='excel_output', help='Write Output in Excel format instead of json')
-	
+	# Don't auto open results once complete
+	parser.add_argument('-no', '--no', '--nopen', action='store_true', dest='no_open', help='Disable auto opening of results')
 	# Component Testing
 	parser.add_argument("--db", '--database', action='store', dest='database', help='Path to SQLite Component / Page_Test Database')
 	parser.add_argument("--execute", action='store_true', dest='execute_tests', default=False, help='Use the --execute option to execute commands in component / page test tables')

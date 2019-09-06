@@ -67,4 +67,5 @@ class Status:
 			out_file = parser.status_to_excel(self.status_results, 'statusCheck')  # Write Excel Output
 		else:
 			out_file = self.logger.write_log(self.status_results, 'statusCheck')  # Write Log to json File
-		self.logger.open_out_file(out_file)
+		if not self.arguments.no_open:
+			self.logger.open_out_file(out_file)
