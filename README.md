@@ -1,4 +1,5 @@
 
+<img src="src/resources/canary.png" alt="Canary Logo" width="200"/>
 ![picturealt](src/resources/canary.png "Canary Logo" =500x) Canary Summary
 canary is a command line tool to scrape html elements, test availability of links and images, and build an easy to read report
 
