@@ -195,7 +195,8 @@ class Base:
 				for item in response.history:
 					hist.append(item.url)
 				hist.append(response.url)
-				response_data["redirect_trace"] = str(hist)
+				response_data["redirect_trace"] = hist
+				response_data["redirect_count"] = str(len(hist))
 				# print("Redirect_History: " + str(url) + " --> " + str(hist))
 			else:
 				response_data['status'] = response.status_code

@@ -82,8 +82,10 @@ class Verify:
 								self.log[url_key][element_type][index]['pageTitle'] = response_data['pageTitle']
 								try:
 									self.log[url_key][element_type][index]["redirect_trace"] = response_data['redirect_trace']
+									self.log[url_key][element_type][index]["redirect_count"] = response_data['redirect_count']
 								except:
 									self.log[url_key][element_type][index]["redirect_trace"] = list()
+									self.log[url_key][element_type][index]["redirect_count"] = "0"
 									pass
 	
 	def _verify(self, url):
