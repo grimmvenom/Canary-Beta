@@ -34,9 +34,34 @@ class Base:
 		self.exec_time = str(time.strftime("%I_%M_%p"))  # Time
 		# self.log_dir = self.get_log_dir()
 		self.log_dir = str(Path.home()) + os.sep + "canary" + os.sep + "results" + os.sep
+		self.stdout_dir = str(Path.home()) + os.sep + "canary" + os.sep + "stdout" + os.sep
 		self.timeout = 10
 		urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
+	
+	def log_stdout(self):
+		if not os.path.exists(self.stdout_dir):  # Check if logs directory does not exist
+			os.makedirs(self.stdout_dir)  # Create logs directory
+		pylog = self.stdout_dir + "canary_" + self.date + "_" + self.exec_time + ".txt"
+		print("Logging STDOut to: " + str(pylog))
+		# Define Standard Output
+		# sys.stdout = open(pylog, 'w')
+		class Tee(object):
+			def __init__(self, *files):
+				self.files = files
+			
+			def write(self, obj):
+				for f in self.files:
+					f.write(obj)
+					f.flush()  # If you want the output to be visible immediately
+			
+			def flush(self):
+				for f in self.files:
+					f.flush()
+		
+		pyout = open(pylog, 'w')
+		# original = sys.stdout
+		sys.stdout = Tee(sys.stdout, pyout)
+		
 	def write_log(self, log: dict, filename=""):
 		if not os.path.isdir(self.log_dir):
 			os.makedirs(self.log_dir)
@@ -147,30 +172,45 @@ class Base:
 		# print([element_url, element_type, element_index])
 		response_data["url"] = str(url)
 		try:
-			response = session.get(url, stream=True, verify=False, allow_redirects=True)
+			response = session.get(url, stream=True, verify=False, allow_redirects=30)
 			if response.history:
+				hist = list()
 				response_data["status"] = str(response.history[0].status_code)
 				response_data["redirectedURL"] = response.url
 				response_data["message"] = str(responses[int(response.history[0].status_code)])
+				for item in response.history:
+					# print("History: " + str(item.url))
+					hist.append(item.url)
+				response_data["redirect_history"] = str(hist)
+				# print("Redirect_History: " + str(url) + " --> " + str(hist))
 			else:
 				response_data['status'] = response.status_code
 				response_data["message"] = str(responses[int(response.status_code)])
 			tree = fromstring(response.content)
 			response_data["pageTitle"] = tree.findtext('.//title')
 			page_source = str(response.content)
-		except Exception as e:
+		
+		except requests.sessions.TooManyRedirects as e:
 			response_data['status'] = "ERROR"
-			response_data['message'] = "Request Error"
+			response_data['message'] = str(e)
 			response_data['pageTitle'] = "N/A"
 			page_source = "ERROR"
-			print("Error: \n" + str(e))
-			print("\nFailure @: " + str(url))
-			print("\n")
+			print("Failure @: " + str(url))
+			print("Error: " + str(e) + "\n")
+			
+		except Exception as e:
+			response_data['status'] = "ERROR"
+			response_data['message'] = str(e)
+			response_data['pageTitle'] = "N/A"
+			page_source = "ERROR"
+			print("Failure @: " + str(url))
+			print("Error: " + str(e) + "\n")
+
 		if source:
 			return response_data, page_source, session
 		else:
 			return response_data, session
-			
+	
 	def get_protocol(self, url):
 		return re.findall('(?i)(https?:)', url)[0]
 

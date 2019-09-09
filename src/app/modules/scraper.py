@@ -104,6 +104,7 @@ class Scrape:
 	
 	def _scrape(self, url):
 		response, page_source, self.session = self.base.session_get_response(self.session, url, True)
+		
 		# print("URL: " + str(url))
 		results = self._scrape_enum_elements(url, response, page_source)
 		
@@ -121,7 +122,7 @@ class Scrape:
 	def _scrape_enum_elements(self, url, response, page_source):
 		print("Scraping Enum Elements from: " + str(url))
 		results = list()
-		manual = ('java', '#', 'data:')
+		manual = ('javascript:void(0);', 'java', '#', 'data:')
 		soup = BeautifulSoup(page_source, 'html.parser')
 		for index, type in enumerate(ScrapeRequirements):
 			element_type = str(type).split(".", 1)[1].lower()
@@ -148,19 +149,18 @@ class Scrape:
 						if isinstance(temp, list):
 							temp = temp[0]
 						if attribute in ['href', 'src']:
-							if temp.startswith("https://") or temp.startswith("http://"):
-								element_log['target_url'] = temp
-							elif temp.startswith("//"):
-								element_log['target_url'] = self.base.get_protocol(url) + temp
-							elif temp.startswith("/") or not any([temp.startswith(s) for s in ['http://', 'https://', "//"]]):
-								element_log['target_url'] = str(self.base.get_site_root(url)) + temp
-							elif temp.startswith(manual):
-								pass
-							else:
-								pass
-							if element_log['target_url']:
-								valid_url = self.base.detect_valid_url(element_log['target_url'])
-								element_log['valid_url'] = valid_url
+							if not temp.startswith(manual):
+								if temp.startswith("https://") or temp.startswith("http://"):
+									element_log['target_url'] = temp
+								elif temp.startswith("//"):
+									element_log['target_url'] = self.base.get_protocol(url) + temp
+								elif temp.startswith("/") or not any([temp.startswith(s) for s in ['http://', 'https://', "//"]]):
+									element_log['target_url'] = str(self.base.get_site_root(url)) + temp
+								else:
+									pass
+								if element_log['target_url']:
+									valid_url = self.base.detect_valid_url(element_log['target_url'])
+									element_log['valid_url'] = valid_url
 						element_log[str(attribute)] = str(temp)
 					except:
 						pass
@@ -285,7 +285,7 @@ class Scrape:
 	
 	def _sort_dict(self):
 		print("Sorting Scraped Results")
-		verifiable = ['images', 'links']
+		verifiable = ['images', 'links', 'iframes']
 		for url_key in self.scrape_results.keys():  # Sort Through URLs dictionary and organize it
 			for et_key, et_value in self.scrape_results[url_key].items():  # Sort Through Element Types (images, links, forms, etc)
 				ignored_count = 0

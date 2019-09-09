@@ -45,6 +45,7 @@ class Canary:
 
 	def main(self):
 		start_time = time.time()
+		self.logger.log_stdout()  # log stdoutput to file
 		type_loop = self.arguments.type.copy()
 		if 'verify' in type_loop:
 			type_loop.remove('verify')

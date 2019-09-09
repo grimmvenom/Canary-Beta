@@ -139,6 +139,9 @@ class Parse_Excel:
 					if key == 'status' and re.match(self.errors, str(value)):
 						cell_format = workbook.add_format({'bold': True, 'bg_color': 'red'})
 						worksheet.write(row, column, int(value), cell_format)
+					elif key == 'status' and str("ERROR") in str(value):
+						cell_format = workbook.add_format({'bold': True, 'bg_color': 'red'})
+						worksheet.write(row, column, str(value), cell_format)
 					elif key == 'status' and re.match(self.redirects, str(value)):
 						cell_format = workbook.add_format({'bold': True, 'bg_color': 'yellow'})
 						worksheet.write(row, column, int(value), cell_format)
