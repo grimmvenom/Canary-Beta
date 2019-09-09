@@ -41,6 +41,8 @@ class Scrape:
 		self.sorted_results = dict()
 		self.scraped_total = 0
 		self.session = requests.session()
+		self.session.max_redirects = 30
+		self.redirect_limit = 30
 		self.available_components = dict()
 		self.available_page_tests = dict()
 		self.logger = Base()

@@ -166,7 +166,7 @@ class Base:
 		else:
 			return request_response
 
-	def session_get_response(self, session, url, source=False, debug=False):
+	def session_get_response(self, session, url, source=False, debug=False, redirect_limit=30):
 		urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 		if debug:
 			try:  # for Python 3
@@ -185,13 +185,13 @@ class Base:
 		# print([element_url, element_type, element_index])
 		response_data["url"] = str(url)
 		try:
-			response = session.get(url, stream=True, verify=False, allow_redirects=30)
+			response = session.get(url, stream=True, verify=False, allow_redirects=redirect_limit)
 			if response.history:
 				hist = list()
 				response_data["status"] = str(response.history[0].status_code)
 				response_data["redirectedURL"] = response.url
 				response_data["message"] = str(responses[int(response.history[0].status_code)])
-				# print("URL:  \t", str(url))
+				hist.append(url)
 				for item in response.history:
 					hist.append(item.url)
 				hist.append(response.url)

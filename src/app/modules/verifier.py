@@ -28,6 +28,8 @@ class Verify:
 		self.base = Base()
 		self.unique_requests = list()
 		self.session = requests.session()
+		self.session.max_redirects = 30
+		self.redirect_limit = 30
 		self.logger = Base()
 		if self.arguments.web_username and self.arguments.web_password:
 			print("Setting Auth with username: " + str(self.arguments.web_username))
