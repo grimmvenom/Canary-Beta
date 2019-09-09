@@ -26,10 +26,10 @@ class Verify:
 		self.arguments = arguments
 		self.log = log.copy()
 		self.base = Base()
-		self.unique_requests = list()
 		self.session = requests.session()
 		self.session.max_redirects = 30
 		self.redirect_limit = 30
+		self.unique_requests = list()
 		self.logger = Base()
 		if self.arguments.web_username and self.arguments.web_password:
 			print("Setting Auth with username: " + str(self.arguments.web_username))
@@ -48,16 +48,17 @@ class Verify:
 			for element_type in self.log[url_key].keys():  # Loop Through element type keys
 				if not element_type.startswith(('ignored_', 'forms')):  # Ignore some keys
 					for index, value in self.log[url_key][element_type].items():  # Append data to list
-						target_url = value['target_url']
+						target_url = str(value['target_url'])
 						if value['valid_url']:
-							counter += 1
 							if target_url not in self.unique_requests:
+								counter += 1
 								self.unique_requests.append(target_url)
 							# request_list.append([url_key, element_type, index, value])
+		self.unique_requests = list(set(self.unique_requests))
 		print("Total Target Urls: " + str(counter))
+		print("Unique Target Urls: " + str(len(self.unique_requests)))
 	
 	def _worker(self):
-		print("Unique Target Urls: " + str(len(self.unique_requests)))
 		print("Verifying Unique Targets\n")
 		with multiprocessing.Pool(processes=10) as pool:  # Start Multiprocessing pool
 			results = pool.map(self._verify, self.unique_requests)
@@ -90,10 +91,6 @@ class Verify:
 	
 	def _verify(self, url):
 		response_data, self.session = self.base.session_get_response(self.session, url, False, False)
-		# try:
-		# 	print("URL: ", response_data["url"], " --> ", response_data['redirect_history'])
-		# except:
-		# 	pass
 		return [url, response_data]
 
 	def _log(self):

@@ -72,6 +72,7 @@ class Scrape:
 			results = pool.map(self._scrape, urls)
 			# queue = dict(pair for d in results for pair in d.items())  # convert the returned list to dictionary
 		# print(str(results))
+		print("\n\n")
 		for result in results:
 			for item in result:
 				self.scraped_total += 1
@@ -118,7 +119,7 @@ class Scrape:
 			page_test_results = self._scrape_page_tests(url)
 			for result in page_test_results:
 				results.append(result)
-		print("\n\n")
+		# print("\n\n")
 		return results
 	
 	def _scrape_enum_elements(self, url, response, page_source):

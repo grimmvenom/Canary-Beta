@@ -207,22 +207,22 @@ class Base:
 		
 		except requests.sessions.TooManyRedirects as e:
 			print("\n\nMAX REDIRECTS")
+			print("Failure @: " + str(url))
+			print("Error: " + str(e) + "\n")
 			response_data['status'] = "ERROR"
 			response_data['message'] = str(e)
 			response_data['pageTitle'] = "N/A"
 			response_data["redirect_trace"] = list()
 			page_source = "ERROR"
-			print("Failure @: " + str(url))
-			print("Error: " + str(e) + "\n")
 			
 		except Exception as e:
+			print("\n\nFailure @: " + str(url))
+			print("Error: " + str(e) + "\n")
 			response_data['status'] = "ERROR"
 			response_data['message'] = str(e)
 			response_data['pageTitle'] = "N/A"
 			response_data["redirect_trace"] = list()
 			page_source = "ERROR"
-			print("Failure @: " + str(url))
-			print("Error: " + str(e) + "\n")
 	
 		if source:
 			return response_data, session, page_source
