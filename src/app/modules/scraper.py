@@ -103,7 +103,7 @@ class Scrape:
 			self.scrape_results = element_results  # Set Class Log to element_results dictionary
 	
 	def _scrape(self, url):
-		response, page_source, self.session = self.base.session_get_response(self.session, url, True)
+		response, self.session, page_source = self.base.session_get_response(self.session, url, True, False)
 		
 		# print("URL: " + str(url))
 		results = self._scrape_enum_elements(url, response, page_source)

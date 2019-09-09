@@ -15,8 +15,8 @@ import sqlite3
 import time
 import json
 import subprocess
-import requests
 import multiprocessing
+import requests, logging
 import urllib3, urllib.parse
 from urllib3.exceptions import InsecureRequestWarning
 from bs4 import BeautifulSoup
@@ -166,8 +166,21 @@ class Base:
 		else:
 			return request_response
 
-	def session_get_response(self, session, url, source=False):
+	def session_get_response(self, session, url, source=False, debug=False):
 		urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+		if debug:
+			try:  # for Python 3
+				from http.client import HTTPConnection
+			except ImportError:
+				from httplib import HTTPConnection
+			HTTPConnection.debuglevel = 1
+			
+			logging.basicConfig()  # you need to initialize logging, otherwise you will not see anything from requests
+			logging.getLogger().setLevel(logging.DEBUG)
+			requests_log = logging.getLogger("urllib3")
+			requests_log.setLevel(logging.DEBUG)
+			requests_log.propagate = False
+		
 		response_data = dict()
 		# print([element_url, element_type, element_index])
 		response_data["url"] = str(url)
@@ -178,10 +191,11 @@ class Base:
 				response_data["status"] = str(response.history[0].status_code)
 				response_data["redirectedURL"] = response.url
 				response_data["message"] = str(responses[int(response.history[0].status_code)])
+				# print("URL:  \t", str(url))
 				for item in response.history:
-					# print("History: " + str(item.url))
 					hist.append(item.url)
-				response_data["redirect_history"] = str(hist)
+				hist.append(response.url)
+				response_data["redirect_trace"] = str(hist)
 				# print("Redirect_History: " + str(url) + " --> " + str(hist))
 			else:
 				response_data['status'] = response.status_code
@@ -191,9 +205,11 @@ class Base:
 			page_source = str(response.content)
 		
 		except requests.sessions.TooManyRedirects as e:
+			print("\n\nMAX REDIRECTS")
 			response_data['status'] = "ERROR"
 			response_data['message'] = str(e)
 			response_data['pageTitle'] = "N/A"
+			response_data["redirect_trace"] = list()
 			page_source = "ERROR"
 			print("Failure @: " + str(url))
 			print("Error: " + str(e) + "\n")
@@ -202,12 +218,13 @@ class Base:
 			response_data['status'] = "ERROR"
 			response_data['message'] = str(e)
 			response_data['pageTitle'] = "N/A"
+			response_data["redirect_trace"] = list()
 			page_source = "ERROR"
 			print("Failure @: " + str(url))
 			print("Error: " + str(e) + "\n")
-
+	
 		if source:
-			return response_data, page_source, session
+			return response_data, session, page_source
 		else:
 			return response_data, session
 	

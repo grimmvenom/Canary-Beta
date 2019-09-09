@@ -78,9 +78,18 @@ class Verify:
 									pass
 								self.log[url_key][element_type][index]['message'] = response_data['message']
 								self.log[url_key][element_type][index]['pageTitle'] = response_data['pageTitle']
+								try:
+									self.log[url_key][element_type][index]["redirect_trace"] = response_data['redirect_trace']
+								except:
+									self.log[url_key][element_type][index]["redirect_trace"] = list()
+									pass
 	
 	def _verify(self, url):
-		response_data, self.session = self.base.session_get_response(self.session, url, False)
+		response_data, self.session = self.base.session_get_response(self.session, url, False, False)
+		# try:
+		# 	print("URL: ", response_data["url"], " --> ", response_data['redirect_history'])
+		# except:
+		# 	pass
 		return [url, response_data]
 
 	def _log(self):
