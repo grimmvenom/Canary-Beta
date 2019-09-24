@@ -230,7 +230,7 @@ class Base:
 			return response_data, session
 	
 	def get_protocol(self, url):
-		return re.findall('(?i)(https?:)', url)[0]
+		return re.findall('(?i)(https?:)', url)[0].replace(":", "")
 
 	def get_site_root(self, url):
 		parsed_uri = urllib.parse.urlparse(str(url))

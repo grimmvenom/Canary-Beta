@@ -26,9 +26,10 @@ from app.modules.parse_results import Parse_Excel
 
 
 class ScrapeRequirements(Enum):
-	IMAGES = ["img"], ["src", "name", "class", "id", "value", 'title', 'alt', 'role', 'data-srcset']
-	LINKS = ["a"], ["href",  "name", "class", "id", "type", "alt", "title", 'role']
-	FORMS = ["input", 'textarea', 'select', 'button'], ["name", "class", "id", "type", "value", 'role']
+	IMAGES = ["img", "picture"], ["src", "name", "class", "id", "value", 'title', 'alt', 'role', 'data-srcset']
+	DYNAMIC = ["source"], ["data-srcset", "src", "href", "media", "srcset"]
+	LINKS = ["a"], ["href",  "name", "class", "id", "type", "alt", "title", "role"]
+	FORMS = ["input", 'textarea', 'select', 'button'], ["name", "class", "id", "type", "value", "role"]
 	IFRAMES = ["iframe"], ["src"]
 
 
@@ -123,11 +124,13 @@ class Scrape:
 		return results
 	
 	def _scrape_enum_elements(self, url, response, page_source):
+		print(url)
 		print("Scraping Enum Elements from: " + str(url))
 		results = list()
-		manual = ('javascript:void(0);', 'java', '#', 'data:')
+		manual = ('javascript:void(0);', 'java', '#', 'data:')  # Define Links to not check
 		soup = BeautifulSoup(page_source, 'html.parser')
-		for index, type in enumerate(ScrapeRequirements):
+		
+		for index, type in enumerate(ScrapeRequirements):  # Loop Through Element Types and Attributes you want to collect
 			element_type = str(type).split(".", 1)[1].lower()
 			# print("Checking " + str(element_type) + " on: " + str(url))
 			element_tags = ScrapeRequirements[element_type.upper()].value[0]
@@ -139,40 +142,51 @@ class Scrape:
 					for t in temp:
 						elements.append({'tag': str(tag), 'value': t})
 			
-			# print(str(element_tags) + " tags found: " + str(len(elements)))
-			# print(elements)
 			for x, y in enumerate(elements):
 				tag = elements[x]['tag']
 				element = elements[x]['value']
 				element_log = dict()
 				for attribute in attributes:
 					try:
-						# print("scraping " + str(attribute))
-						temp = element[attribute]
-						if isinstance(temp, list):
-							temp = temp[0]
-						if attribute in ['href', 'src']:
-							if not temp.startswith(manual):
-								if temp.startswith("https://") or temp.startswith("http://"):
-									element_log['target_url'] = temp
-								elif temp.startswith("//"):
-									element_log['target_url'] = self.base.get_protocol(url) + temp
-								elif temp.startswith("/") or not any([temp.startswith(s) for s in ['http://', 'https://', "//"]]):
-									element_log['target_url'] = str(self.base.get_site_root(url)) + temp
-								else:
-									pass
-								if element_log['target_url']:
-									valid_url = self.base.detect_valid_url(element_log['target_url'])
-									element_log['valid_url'] = valid_url
+						temp = str()
+						if isinstance(element[attribute], list):
+							temp = str(temp[0])
+						else:
+							temp = str(element[attribute])
+						
+						# If Attribute is one that indicates target url and not an angular / js link
+						if attribute in ['href', 'src', 'data-srcset'] and not temp.startswith(manual):
+							base_url = self.base.get_site_root(url)
+							target_url = str(temp)
+							if target_url.startswith("/"):
+								target_url = base_url + target_url.replace('/', '', 1)
+							if target_url.startswith("//"):
+								target_url = base_url + target_url.replace('//', '', 1)
+							
+							if not target_url.startswith("https://") and not target_url.startswith("http://"):
+								target_url = base_url + target_url
+							
+							if target_url.count("//") > 1:  # Check for malformed URL, remove // from non protocol
+								target_url = (target_url[::-1].replace("//"[::-1], "/"[::-1], 1))[::-1]  # Remove // after protocol
+			
+							element_log['target_url'] = str(target_url)
+						
+							if element_log['target_url']:
+								valid_url = self.base.detect_valid_url(element_log['target_url'])
+								element_log['valid_url'] = valid_url
 						element_log[str(attribute)] = str(temp)
-					except:
+					except Exception as e:
+						# print(e)
 						pass
+				
 				element_log['scraped_from'] = str(url)
 				result = {'url': str(url),
 						'elementType': str(element_type),
 						'index': str(x),
 						'htmlTag': str(tag),
 						'data': element_log}
+				
+				# Formatting Cleanup
 				if elements[x]['value'].content:
 					content = str(element.content).replace("\\t", "").replace("\\r", "").replace("\\n", ",").strip()  # Remove encoded characters
 					new_content = str(re.sub("\s{3,}", ",", content))  # Replace 3+ spaces with a comma
@@ -194,8 +208,8 @@ class Scrape:
 						# print("Text Exception: " + str(e))
 						pass
 				
-				# Domain URL Filters
-				if self.arguments.limit:
+				# Domain Filtering
+				if self.arguments.limit:  # Only include domain if specified in limit argument
 					if 'target_url' in result['data']:
 						target_domain = self.base.get_site_root(result['data']['target_url'])
 						protocol = self.base.get_protocol(target_domain)
@@ -204,7 +218,7 @@ class Scrape:
 							results.append(result)
 					else:
 						results.append(result)
-				elif self.arguments.exclude:
+				elif self.arguments.exclude:  # Remove URL if in exclude argument
 					if 'target_url' in result['data']:
 						target_domain = self.base.get_site_root(result['data']['target_url'])
 						protocol = self.base.get_protocol(target_domain)
@@ -288,7 +302,7 @@ class Scrape:
 	
 	def _sort_dict(self):
 		print("Sorting Scraped Results")
-		verifiable = ['images', 'links', 'iframes']
+		verifiable = ['images', 'links', 'iframes', 'dynamic']
 		for url_key in self.scrape_results.keys():  # Sort Through URLs dictionary and organize it
 			for et_key, et_value in self.scrape_results[url_key].items():  # Sort Through Element Types (images, links, forms, etc)
 				ignored_count = 0
