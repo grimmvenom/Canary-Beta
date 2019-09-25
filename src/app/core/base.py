@@ -73,11 +73,10 @@ class Base:
 		with open(file, 'w') as jsonfile:
 			jsonfile.write(json.dumps(log, sort_keys=False, indent=4, separators=(',', ':')))
 		jsonfile.close()
-		print("\n")
 		return str(file)
 
 	def get_extension(self, file: str):
-		return re.findall('(?i)(\.\w{2,4})', file)[-1]
+		return str(re.findall('(?i)(\.\w{2,4})', file)[-1])
 
 	def log(self, the_dict: dict, first_log:dict):
 		if len(self.canary_log) <= 0:
@@ -100,7 +99,7 @@ class Base:
 				self.canary_log[key] = value
 	
 	def open_out_file(self, report):
-		print("Opening ", str(report))
+		print("Opening: ", str(report))
 		try:
 			if platform.system() == "Windows":
 				subprocess.call(('open', report))
@@ -119,7 +118,6 @@ class Base:
 			except:
 				print("Error Opening " + str(report))
 				pass
-			
 			pass
 	
 	def get_response(self, url, source=False, username="", password=""):
