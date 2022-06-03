@@ -1,4 +1,4 @@
-bottle==0.12.16
+bottle==0.12.20
 requests==2.22.0
 setuptools==41.0.1
 Eel==0.10.4
