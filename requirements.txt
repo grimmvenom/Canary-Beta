@@ -1,6 +1,6 @@
 bottle==0.12.16
 requests==2.22.0
-setuptools==41.0.1
+setuptools==65.5.1
 Eel==0.10.4
 urllib3==1.24
 Cython==0.29.13
